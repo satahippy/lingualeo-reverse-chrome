@@ -24,7 +24,10 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
 const sentenses = () => {
     if (!currentSentenses) {
-        currentSentenses = retrieveWindowVariable('CONFIG').pages.contentView.contentSentences;
+        currentSentenses = [];
+        document.querySelectorAll('#textContentInner > context').forEach(element => {
+            currentSentenses.push(element.textContent);
+        });
     }
     return currentSentenses;
 };
@@ -34,22 +37,3 @@ const translate = (text) => {
         .then(response => response.json())
         .then(json => json.translate[0].value);
 };
-
-const retrieveWindowVariable = (variable) => {
-    let scriptContent = "var data = document.createElement('div');";
-    scriptContent += "data.id = 'tmpData';";
-    scriptContent += "data.appendChild(document.createTextNode(JSON.stringify(" + variable + ")));";
-    scriptContent += "document.body.appendChild(data);";
-
-    const script = document.createElement('script');
-    script.id = 'tmpScript';
-    script.appendChild(document.createTextNode(scriptContent));
-    (document.body || document.head || document.documentElement).appendChild(script);
-
-    const result = JSON.parse(document.getElementById('tmpData').textContent);
-
-    document.getElementById('tmpScript').remove();
-    document.getElementById('tmpData').remove();    
-
-    return result;
-}
