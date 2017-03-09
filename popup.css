@@ -1,0 +1,11 @@
+body {
+    width: 500px;
+}
+
+#input {
+    width: 100%;
+}
+
+.hide {
+    display: none;
+}

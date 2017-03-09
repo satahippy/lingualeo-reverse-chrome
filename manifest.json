@@ -1,0 +1,18 @@
+{
+    "name": "Lingualeo Reverse Translate Text in Jungles",
+    "version": "0.0.1",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.lingualeo.com/*/jungle/*"],
+            "js": ["content.js"]
+        }
+    ],
+    "page_action": {
+        "default_title": "Lingualeo Reverse",
+        "default_popup": "popup.html"
+    },
+    "manifest_version": 2
+}
