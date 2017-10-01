@@ -1,6 +1,7 @@
 const loading = document.getElementById('loading');
 const input = document.getElementById('input');
 const currentConatiner = document.getElementById('current');
+const answersConatiner = document.getElementById('answers');
 const questionTxt = document.getElementById('question');
 const showBtn = document.getElementById('show');
 const answerTxt = document.getElementById('answer');
@@ -12,6 +13,7 @@ const STATE_QUESTION = 'question';
 const STATE_ANSWER = 'answer';
 
 let state = STATE_INIT;
+let currentQuestion = null;
 
 const stateLoading = () => {
     state = STATE_LOADING;
@@ -41,7 +43,16 @@ const stateAnswer = () => {
     hide(showBtn);
 };
 
+const addAnswer = (original, translated, answer) => {
+    const html = document.createElement('p');
+    html.innerHTML = `<i>${translated}</i><br/><b>O:</b> ${original}<br/><b>Y:</b> ${answer}`;
+    answersConatiner.appendChild(html);
+};
+
 const next = () => {
+    if (currentQuestion) {
+        addAnswer(currentQuestion.original, currentQuestion.translated, value(input));
+    }
     stateLoading();
     chrome.tabs.query({
         active: true,
@@ -56,6 +67,7 @@ const next = () => {
 };
 
 const current = ({original, translated}) => {
+    currentQuestion = {original, translated};
     stateQuestion(original, translated);
 };
 
@@ -73,6 +85,10 @@ const show = (element) => {
 
 const clear = (input) => {
     input.value = '';
+};
+
+const value = (input) => {
+    return input.value;
 };
 
 nextBtn.addEventListener('click', next);
