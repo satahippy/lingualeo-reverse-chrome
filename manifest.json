@@ -14,5 +14,8 @@
         "default_title": "Lingualeo Reverse",
         "default_popup": "popup.html"
     },
+    "permissions": [
+        "contextMenus"
+    ],
     "manifest_version": 2
 }

@@ -7,9 +7,19 @@ chrome.runtime.sendMessage({
 });
 
 document.getElementById('textContentInner').addEventListener('DOMSubtreeModified', () => {
+    // todo need to check the content?
     currentIndex = 0;
     currentSentenses = null;
-}, false);
+});
+
+let currentSentenseHovered = null;
+document.addEventListener('mousedown', (e) => {
+    if(e.button != 2) { 
+        return ;
+    }
+    currentSentenseHovered = getParentByTagName(e.target, 'context');
+    console.log(currentSentenseHovered);
+});
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
     if (msg.from === 'popup' && msg.subject === 'current') {
@@ -19,6 +29,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
                 response({original, translated});
             });
         return true;
+    } else if (msg.from === 'background' && msg.subject === 'startFromHere') {
+        currentIndex = parseInt(currentSentenseHovered.getAttribute('data-index')) || 0;
     }
 });
 
@@ -37,4 +49,20 @@ const translate = (text) => {
     return fetch(`${scheme}//api.lingualeo.com/gettranslates?word=${text}`)
         .then(response => response.json())
         .then(json => json.translate[0].value);
+};
+
+const getParentByTagName = (node, tagname) => {
+	var parent;
+	if (node === null || tagname === '') return;
+	parent  = node.parentNode;
+	tagname = tagname.toUpperCase();
+
+	while (parent.tagName !== "HTML") {
+		if (parent.tagName === tagname) {
+			return parent;
+		}
+		parent = parent.parentNode;
+	}
+
+	return parent;
 };
