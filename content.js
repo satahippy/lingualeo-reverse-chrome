@@ -33,7 +33,8 @@ const sentenses = () => {
 };
 
 const translate = (text) => {
-    return fetch(`http://api.lingualeo.com/gettranslates?word=${text}`)
+    const scheme = window.location.protocol;
+    return fetch(`${scheme}//api.lingualeo.com/gettranslates?word=${text}`)
         .then(response => response.json())
         .then(json => json.translate[0].value);
 };
